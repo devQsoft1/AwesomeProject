@@ -27,6 +27,8 @@ import Styles from '../Common/Style'
 // images
 import CarSVGComponent from '../Assets/CarSVGComponent'
 import FilterSVGComponent from '../Assets/FilterSVGComponent'
+import CrossSVGComponent from '../Assets/CrossSVGComponent'
+
 
 
 //---------- component
@@ -40,6 +42,8 @@ const Home = (props) => {
     const [isModalVisible, setModalVisible] = useState(false);
     const [searchInProcess, setSearchInProcess] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [isFilterd, setIsFilterd] = useState(false)
+    const [filters, setFilters] = useState({})
     const [allCarsData, setAllCarsData] = useState([])
 
     // redux
@@ -58,7 +62,33 @@ const Home = (props) => {
 
         if (state?.search_data_pocket?.data_payload?.payload?.cars?.length > 0) {
 
-            setAllCarsData(state?.search_data_pocket?.data_payload?.payload?.cars || [])
+            let cars_data = state?.search_data_pocket?.data_payload?.payload?.cars || []
+            setAllCarsData(cars_data || [])
+
+            let cars_name = []
+            let cars_color = []
+            let cars_modal = []
+            let cars_year = []
+            let cars_price = []
+
+
+            for (let i = 0; i < cars_data.length; i++) {
+
+                !cars_name.includes(cars_data[i].car) && cars_name.push(cars_data[i].car)
+                !cars_color.includes(cars_data[i].car_color) && cars_color.push(cars_data[i].car_color)
+                !cars_modal.includes(cars_data[i].car_model) && cars_modal.push(cars_data[i].car_model)
+                !cars_year.includes(cars_data[i].price) && cars_year.push(cars_data[i].car_model_year)
+                !cars_price.includes(cars_data[i].price) && cars_price.push(cars_data[i].price)
+            }
+            setFilters(
+                {
+                    cars_name,
+                    cars_color,
+                    cars_modal,
+                    cars_year,
+                    cars_price
+                }
+            )
             setLoading(false)
         }
     }, [state?.search_data_pocket])
@@ -66,7 +96,7 @@ const Home = (props) => {
     //---------- helper : user's action
 
     // manage all clicks
-    const handleClicks = (key) => {
+    const handleClicks = (key, value) => {
 
         switch (key) {
             case 'search':
@@ -80,10 +110,27 @@ const Home = (props) => {
                 setModalVisible(true)
                 break;
 
+            case 'clear_all_filter':
+
+            if(searchText || isFilterd){
+
+                setSearchText('')
+                setIsFilterd(false)
+                getData()
+            }
+            break;
+                
 
             case 'filter_clear':
 
                 setModalVisible(false)
+                setAllCarsData(state?.search_data_pocket?.data_payload?.payload?.cars || [])
+                break;
+
+            case 'filter_call_back':
+
+                setIsFilterd(true)
+                handleFilter(value)
                 break;
 
             default:
@@ -114,6 +161,47 @@ const Home = (props) => {
 
         setSearchInProcess(false)
     }
+
+    // filter of cars
+    const handleFilter = (selected_values) => {
+
+        let cars_array = state?.search_data_pocket?.data_payload?.payload?.cars || []
+        let filter_array = []
+
+        for (let i = 0; i < cars_array.length; i++) {
+
+            if (selected_values?.cars_name?.includes(cars_array[i].car)) {
+
+                filter_array.push(cars_array[i])
+                continue
+            }
+            if (selected_values?.cars_color?.includes(cars_array[i].car_color)) {
+
+                filter_array.push(cars_array[i])
+                continue
+            }
+            if (selected_values?.cars_modal?.includes(cars_array[i].car_model)) {
+
+                filter_array.push(cars_array[i])
+                continue
+            }
+            if (selected_values?.cars_year?.includes(cars_array[i].car_model_year)) {
+
+                filter_array.push(cars_array[i])
+                continue
+            }
+            if (selected_values?.cars_price?.includes(cars_array[i].price)) {
+
+                filter_array.push(cars_array[i])
+                continue
+            }
+        }
+
+        console.log('selectedFilters :', filter_array)
+        setAllCarsData(filter_array);
+        setModalVisible(false);
+    }
+
 
     // get latest data api call
     const getData = () => {
@@ -161,7 +249,7 @@ const Home = (props) => {
     }
 
     // card of cars
-    const renderCars = ({ item, index }) => {
+    const renderCar = ({ item, index }) => {
 
         return (
             <BoxStyle parentsStyle={{ margin: 20, marginBottom: 0 }}>
@@ -183,7 +271,10 @@ const Home = (props) => {
                         style={Styles.carContainer}
                     >
 
-                        {/* first row */}
+                        {
+                            //----- first row
+                        }
+
                         <View
                             style={Styles.row}
                         >
@@ -204,7 +295,10 @@ const Home = (props) => {
                             />
                         </View>
 
-                        {/* secound row */}
+                        {
+                            //----- secound row
+                        }
+
                         <View
                             style={[Styles.rowA, { marginTop: 10 }]}
                         >
@@ -245,7 +339,9 @@ const Home = (props) => {
 
                         </View>
 
-                        {/* car vin */}
+                        {
+                            //----- third row :car vin
+                        }
                         <Text
                             style={{ marginVertical: 10 }}
                         >
@@ -254,7 +350,9 @@ const Home = (props) => {
                             }
                         </Text>
 
-                        {/* third row: price */}
+                        {
+                            //----- third row: price
+                        }
                         <View
                             style={Styles.rowEnd}
                         >
@@ -286,10 +384,16 @@ const Home = (props) => {
         >
 
             {/* filters */}
-            <Modal
-                isModalVisible={isModalVisible}
-                closeModal={handleClicks}
-            />
+            {
+
+                isModalVisible &&
+                <Modal
+                    isModalVisible={isModalVisible}
+                    closeModal={handleClicks}
+                    data={filters}
+                    call_back={handleClicks}
+                />
+            }
 
             {/* view */}
             <ImageBackground
@@ -310,7 +414,6 @@ const Home = (props) => {
 
                             {/* text input */}
                             <TextInput
-                                keyboardType='numeric'
                                 style={Styles.input}
                                 onChangeText={(text) => {
 
@@ -357,6 +460,21 @@ const Home = (props) => {
                             <FilterSVGComponent style={{ marginLeft: 10 }} />
                         </TouchableOpacity>
 
+                        {/* cleat all filter and search */}
+
+                        {
+                        (!!searchText || isFilterd ) &&
+                            <TouchableOpacity
+                                onPress={() => {
+                                    handleClicks('clear_all_filter')
+                                }}
+                            >
+                                                    
+                                <CrossSVGComponent style={{ marginLeft: 10 }}/>
+
+                            </TouchableOpacity>
+                        }
+
                     </View>
 
                 </BoxStyle>
@@ -365,9 +483,9 @@ const Home = (props) => {
                 {
 
                     loading ?
-                        <Loader type={'center'} />
+                        <Loader type={'center'} color={'#fff'} />
                         :
-                        renderList(allCarsData, renderCars)
+                        renderList(allCarsData, renderCar)
                 }
 
             </ImageBackground>
@@ -379,3 +497,104 @@ const Home = (props) => {
 
 export default Home;
 
+
+    // search click
+    // const handleSearch = () => {
+
+    //     let cars_array = allCarsData || []
+    //     let cars_name_array = []
+    //     let cars_color_array = []
+    //     let cars_model_array = []
+    //     let cars_vin_array = []
+    //     let cars_yr_array = []
+
+    //     if (searchText && cars_array?.length > 0) {
+
+    //         cars_name_array = cars_array.filter(x => x.car?.toLowerCase().match(searchText.toLowerCase()))
+    //         cars_color_array = cars_array.filter(x => x.car_color?.toLowerCase().match(searchText.toLowerCase()))
+    //         cars_model_array = cars_array.filter(x => x.car_model?.toLowerCase().match(searchText.toLowerCase()))
+    //         cars_vin_array = cars_array.filter(x => x.car_vin?.toLowerCase().match(searchText.toLowerCase()))
+    //         cars_yr_array = cars_array.filter(x => parseInt(x.car_model_year) === parseInt(searchText))
+
+    //         setAllCarsData([...new Set([...cars_name_array, ...cars_color_array, ...cars_model_array, ...cars_vin_array, ...cars_yr_array])])
+    //     }
+
+    //     setSearchInProcess(false)
+    // }
+
+    // // filter of cars
+    // const handleFilter = (selected_values) => {
+
+    //     let cars_array = state?.search_data_pocket?.data_payload?.payload?.cars || []
+    //     let filter_array = []
+    //     let match_filter = {}
+    //     let compulsory_filter = {}
+
+    //     if (selected_values?.cars_name?.length > 0) {
+    //         compulsory_filter.name = true
+    //     }
+    //     if (selected_values?.cars_color?.length > 0) {
+    //         compulsory_filter.color = true
+    //     }
+    //     if (selected_values?.cars_modal?.length > 0) {
+    //         compulsory_filter.modal = true
+    //     }
+    //     if (selected_values?.cars_year?.length > 0) {
+    //         compulsory_filter.year = true
+    //     }
+    //     if (selected_values?.cars_price?.length > 0) {
+    //         compulsory_filter.price = true
+    //     }
+
+    //     for (let i = 0; i < cars_array.length; i++) {
+
+    //         if (selected_values?.cars_name?.includes(cars_array[i].car)) {
+
+    //             match_filter.name = true
+    //         }
+    //         if (selected_values?.cars_color?.includes(cars_array[i].car_color)) {
+
+    //             match_filter.color = true
+    //         }
+    //         if (selected_values?.cars_modal?.includes(cars_array[i].car_model)) {
+
+    //             match_filter.modal = true
+    //         }
+    //         if (selected_values?.cars_year?.includes(cars_array[i].car_model_year)) {
+
+    //             match_filter.year = true
+    //         }
+    //         if (selected_values?.cars_price?.includes(cars_array[i].price)) {
+
+    //             match_filter.price = true
+    //         }
+
+
+    //         if(compulsory_filter.name){
+
+    //             if(match_filter.name){
+                    
+    //             }
+    //         }
+
+    //         if(compulsory_filter.color){
+
+    //         }
+
+    //         if(compulsory_filter.modal){
+
+    //         }
+
+    //         if(compulsory_filter.year){
+
+    //         }
+
+    //         if(compulsory_filter.price){
+
+    //         }
+    //     }
+
+    //     console.log('filter_array :', filter_array)
+    //     setAllCarsData(filter_array);
+    //     setModalVisible(false);
+    // }

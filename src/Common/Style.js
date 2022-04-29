@@ -24,6 +24,10 @@ const Styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center"
     },
+    bgImageSiderbar: {
+        flex: 1,
+        paddingBottom:10
+    },
     BlackSelectable: {
 
         flex: 1,
@@ -36,6 +40,15 @@ const Styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
+    },
+    BlackBorder: {
+
+        flex: 1,
+        paddingHorizontal: 5,
+
+        borderWidth: 1,
+        borderRadius: 5,
+        borderColor: '#000',
     },
     input: {
         flex: 1,
@@ -84,12 +97,19 @@ const Styles = StyleSheet.create({
     modalStyle: {
         width: '60%',
         height: '100%',
-        
-        margin:-5,
-        paddingVertical:20,
-        paddingHorizontal:10,
-        
+
+        margin: -5,
+        paddingVertical: 20,
+        paddingHorizontal: 10,
+
         backgroundColor: '#fff',
+    },
+
+    devider:{
+
+        width:'100%',
+        height:1,
+        backgroundColor:'#000'
     },
 
     carContainer: {
