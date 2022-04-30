@@ -77,7 +77,7 @@ const Home = (props) => {
                 !cars_name.includes(cars_data[i].car) && cars_name.push(cars_data[i].car)
                 !cars_color.includes(cars_data[i].car_color) && cars_color.push(cars_data[i].car_color)
                 !cars_modal.includes(cars_data[i].car_model) && cars_modal.push(cars_data[i].car_model)
-                !cars_year.includes(cars_data[i].price) && cars_year.push(cars_data[i].car_model_year)
+                !cars_year.includes(cars_data[i].car_model_year) && cars_year.push(cars_data[i].car_model_year)
                 !cars_price.includes(cars_data[i].price) && cars_price.push(cars_data[i].price)
             }
             setFilters(
@@ -530,6 +530,7 @@ export default Home;
     //     let match_filter = {}
     //     let compulsory_filter = {}
 
+    //     // get which filter is selected 
     //     if (selected_values?.cars_name?.length > 0) {
     //         compulsory_filter.name = true
     //     }
@@ -546,52 +547,187 @@ export default Home;
     //         compulsory_filter.price = true
     //     }
 
+    //     // verify filter in data
     //     for (let i = 0; i < cars_array.length; i++) {
 
-    //         if (selected_values?.cars_name?.includes(cars_array[i].car)) {
+    //         if (compulsory_filter.name ) {
 
-    //             match_filter.name = true
-    //         }
-    //         if (selected_values?.cars_color?.includes(cars_array[i].car_color)) {
+    //             if(selected_values?.cars_name?.includes(cars_array[i].car)){
 
-    //             match_filter.color = true
-    //         }
-    //         if (selected_values?.cars_modal?.includes(cars_array[i].car_model)) {
-
-    //             match_filter.modal = true
-    //         }
-    //         if (selected_values?.cars_year?.includes(cars_array[i].car_model_year)) {
-
-    //             match_filter.year = true
-    //         }
-    //         if (selected_values?.cars_price?.includes(cars_array[i].price)) {
-
-    //             match_filter.price = true
-    //         }
-
-
-    //         if(compulsory_filter.name){
-
-    //             if(match_filter.name){
-                    
+    //                 match_filter.name = true
+    //             }else{
+    
+    //                 match_filter.name = false
+    //                 continue;
     //             }
     //         }
 
-    //         if(compulsory_filter.color){
+    //         if (compulsory_filter.color ) {
 
+    //             if(selected_values?.cars_color?.includes(cars_array[i].car)){
+
+    //                 match_filter.color = true
+    //             }else{
+    
+    //                 match_filter.color = false
+    //                 continue;
+    //             }
     //         }
 
-    //         if(compulsory_filter.modal){
+    //         if (compulsory_filter.modal ) {
 
+    //             if(selected_values?.cars_modal?.includes(cars_array[i].car)){
+
+    //                 match_filter.modal = true
+    //             }else{
+    
+    //                 match_filter.modal = false
+    //                 continue;
+    //             }
     //         }
 
-    //         if(compulsory_filter.year){
 
+    //         if (compulsory_filter.year ) {
+
+    //             if(selected_values?.cars_year?.includes(cars_array[i].car)){
+
+    //                 match_filter.year = true
+    //             }else{
+    
+    //                 match_filter.year = false
+    //                 continue;
+    //             }
     //         }
 
-    //         if(compulsory_filter.price){
+    //         if (compulsory_filter.price ) {
 
+    //             if(selected_values?.cars_price?.includes(cars_array[i].car)){
+
+    //                 match_filter.price = true
+    //             }else{
+    
+    //                 match_filter.price = false
+    //                 continue;
+    //             }
     //         }
+
+    //         filter_array.push(cars_array[i].car)
+
+    //         // // add data after filter
+    //         // if(compulsory_filter.name && (compulsory_filter.name === match_filter.name) ){
+
+    //         //     if(compulsory_filter.color && (compulsory_filter.color === match_filter.color) ){
+                    
+    //         //         if(compulsory_filter.modal && (compulsory_filter.modal === match_filter.modal) ){
+
+    //         //             if(compulsory_filter.year && (compulsory_filter.year === match_filter.year) ){
+
+    //         //                 if(compulsory_filter.price && (compulsory_filter.price === match_filter.price) ){
+
+    //         //                     filter_array.push(cars_array[i].car)
+    //         //                 }
+    //         //             }else{
+                            
+    //         //                 if(compulsory_filter.price && (compulsory_filter.price === match_filter.price) ){
+
+    //         //                     filter_array.push(cars_array[i].car)
+    //         //                 }
+    //         //             }
+    //         //         }else{
+
+    //         //             if(compulsory_filter.year && (compulsory_filter.year === match_filter.year) ){
+
+    //         //                 if(compulsory_filter.price && (compulsory_filter.price === match_filter.price) ){
+
+    //         //                     filter_array.push(cars_array[i].car)
+    //         //                 }
+    //         //             }else{
+                            
+    //         //                 if(compulsory_filter.price && (compulsory_filter.price === match_filter.price) ){
+
+    //         //                     filter_array.push(cars_array[i].car)
+    //         //                 }
+    //         //             }
+    //         //         }
+
+    //         //     }else{
+
+    //         //         if(compulsory_filter.modal && (compulsory_filter.modal === match_filter.modal) ){
+
+    //         //             if(compulsory_filter.year && (compulsory_filter.year === match_filter.year) ){
+
+    //         //                 if(compulsory_filter.price && (compulsory_filter.price === match_filter.price) ){
+
+    //         //                     filter_array.push(cars_array[i].car)
+    //         //                 }
+    //         //             }
+    //         //         }
+    //         //     }
+    //         // }else{
+
+    //         //     if(compulsory_filter.color && (compulsory_filter.color === match_filter.color) ){
+                    
+    //         //         if(compulsory_filter.modal && (compulsory_filter.modal === match_filter.modal) ){
+
+    //         //             if(compulsory_filter.year && (compulsory_filter.year === match_filter.year) ){
+
+    //         //                 if(compulsory_filter.price && (compulsory_filter.price === match_filter.price) ){
+
+    //         //                     filter_array.push(cars_array[i].car)
+    //         //                 }
+    //         //             }
+    //         //         }else{
+
+    //         //             if(compulsory_filter.year && (compulsory_filter.year === match_filter.year) ){
+
+    //         //                 if(compulsory_filter.price && (compulsory_filter.price === match_filter.price) ){
+
+    //         //                     filter_array.push(cars_array[i].car)
+    //         //                 }
+    //         //             }else{
+
+    //         //                 if(compulsory_filter.price && (compulsory_filter.price === match_filter.price) ){
+
+    //         //                     filter_array.push(cars_array[i].car)
+    //         //                 }
+    //         //             }
+    //         //         }
+
+    //         //     }else{
+    //         //         if(compulsory_filter.modal && (compulsory_filter.modal === match_filter.modal) ){
+
+    //         //             if(compulsory_filter.year && (compulsory_filter.year === match_filter.year) ){
+
+    //         //                 if(compulsory_filter.price && (compulsory_filter.price === match_filter.price) ){
+
+    //         //                     filter_array.push(cars_array[i].car)
+    //         //                 }
+    //         //             }else{
+
+    //         //                 if(compulsory_filter.price && (compulsory_filter.price === match_filter.price) ){
+
+    //         //                     filter_array.push(cars_array[i].car)
+    //         //                 }
+    //         //             }
+    //         //         }else{
+
+    //         //             if(compulsory_filter.year && (compulsory_filter.year === match_filter.year) ){
+
+    //         //                 if(compulsory_filter.price && (compulsory_filter.price === match_filter.price) ){
+
+    //         //                     filter_array.push(cars_array[i].car)
+    //         //                 }
+    //         //             }else{
+
+    //         //                 if(compulsory_filter.price && (compulsory_filter.price === match_filter.price) ){
+
+    //         //                     filter_array.push(cars_array[i].car)
+    //         //                 }
+    //         //             }
+    //         //         }
+    //         //     }
+    //         // }
+
     //     }
 
     //     console.log('filter_array :', filter_array)

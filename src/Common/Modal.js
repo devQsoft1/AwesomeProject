@@ -35,11 +35,11 @@ const ModalView = (props) => {
         if (selected_array.includes(selected_value)) {
 
             selected_array = selected_array.filter(x => x !== selected_value)
-            setSelectedFilters({ [key]: selected_array, ...selectedFilters })
+            setSelectedFilters({ ...selectedFilters, [key]: selected_array })
         } else {
 
             selected_array.push(selected_value)
-            setSelectedFilters({ [key]: selected_array, ...selectedFilters })
+            setSelectedFilters({ ...selectedFilters, [key]: selected_array, })
         }
 
     }
